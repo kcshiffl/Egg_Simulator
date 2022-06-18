@@ -1,23 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TextReader;
 
 public class NPCDialogController : MonoBehaviour
 {
-    public GameObject dialog;
-    private string text = "absdfbaiusbtfuiowebuiotbaweuitbweioabtioweabtoiwebtioabwioetbawioetbiowe";
-
-    // Start is called before the first frame update
-    void Start() {
-        
-    }
-
-    // Update is called once per frame
-    void Update() {
-        
-    }
-
+    public GameObject dialogUI;
+    public List<TextAsset> dialogOptions;
+    
     public void playScript() {
-        dialog.GetComponent<DialogController>().startDialog(text);
+        dialogUI.GetComponent<DialogController>().startDialog(TextReader.TextReader.readTextFile(dialogOptions[0]));
+        if (dialogOptions.Count > 1) {
+            dialogOptions.RemoveAt(0);
+        }
     }
 }

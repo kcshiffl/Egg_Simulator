@@ -14,8 +14,8 @@ public class PlayerInteraction : MonoBehaviour {
             npc = null;
         }
 
-        if (npc != null && Input.GetKeyDown(KeyCode.Return)) {
+        if (npc != null && Input.GetKeyDown(KeyCode.Return) && !dialog.GetComponent<DialogController>().isInDialog) {
             npc.GetComponent<NPCDialogController>().playScript();
         }
-    }   
+    } 
 }
