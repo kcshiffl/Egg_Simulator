@@ -10,7 +10,6 @@ public class DialogController : MonoBehaviour
     private string text = "";
 
     public bool isInDialog = false;
-    public List<AudioClip> audioOptions;
     private AudioSource audio;
 
     // Update is called once per frame
@@ -20,13 +19,13 @@ public class DialogController : MonoBehaviour
         }
     }
 
-    public void startDialog(string text) {
+    public void startDialog(string text, AudioClip voice) {
         isInDialog = true;
         player.GetComponent<PlayerMovement>().disableMovement();
         this.text = text;
         resetText();
         gameObject.SetActive(true);
-        StartCoroutine(delay(text));
+        StartCoroutine(readThroughText(text, voice));
     }
 
     private void closeDialog() {
@@ -36,12 +35,12 @@ public class DialogController : MonoBehaviour
         isInDialog = false;
     }
 
-    private IEnumerator delay(string text) {
+    private IEnumerator readThroughText(string text, AudioClip voice) {
         for (int i = 0; i < text.Length; i++) {
-            gameObject.GetComponent<UnityEngine.UI.Text>().text += text[i];
             finishedDialog = false;
+            playSoundEffect(voice);
+            gameObject.GetComponent<UnityEngine.UI.Text>().text += text[i];
             yield return new WaitForSeconds(0.02f);
-            playSoundEffect();
         }
         finishedDialog = true;
     }
@@ -50,9 +49,13 @@ public class DialogController : MonoBehaviour
         gameObject.GetComponent<UnityEngine.UI.Text>().text = "";
     }
 
-    private void playSoundEffect() {
-        audio = GetComponent<AudioSource>();
-        audio.clip = audioOptions[1];
-        audio.Play();
+    private void playSoundEffect(AudioClip voice) {
+        if (audio == null) {
+            audio = GetComponent<AudioSource>();
+        }
+        audio.clip = voice;
+        if (!audio.isPlaying) {
+            audio.Play();
+        }
     }
 }
